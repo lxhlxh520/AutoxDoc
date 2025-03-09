@@ -26,6 +26,8 @@ shizuku("input tap 500 500");
 
 ## shizuku.runRhinoScript(script)
 
+v7.1.2 新增
+
 - script \{ string } 要运行的脚本内容
 - return \{ any } 运行脚本设置的结果
 
@@ -49,6 +51,8 @@ console.info(data);
 ```
 
 ## shizuku.runRhinoScriptFile(path)
+
+v7.1.2 新增
 
 - path \{ string } 要运行的脚本路径，只能是绝对路径
 - return \{ any } 运行脚本设置的结果
