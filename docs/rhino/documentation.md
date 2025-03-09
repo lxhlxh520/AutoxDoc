@@ -6,7 +6,7 @@ sidebar_position: 1
 
 <!-- type=misc -->
 
-文档使用 Markdown 编写，使用 [Docsify](https://github.com/docsifyjs/docsify/) 解析为网页，[源码](https://github.com/hyb1996/AutoJs-Docs) 在 github 上开源，目前由开发者维护。
+文档使用 Markdown 编写，使用 [Docusaurus](https://www.docusaurus.cn/) 解析为网页，[源码](https://github.com/aiselp/AutoxDoc) 在 github 上开源，目前由开发者维护。
 
 ## API 稳定性
 

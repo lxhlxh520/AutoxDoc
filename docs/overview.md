@@ -4,13 +4,13 @@ sidebar_position: 2
 
 # 综述
 
-由于原作者不再维护 [Auto.js](https://github.com/hyb1996/Auto.js)，我计划在原来 4.1 版本的基础上继续维护项目，并将原项目命名为 [AutoX.js](https://github.com/kkevsekk1/AutoX)。
+由于原作者不再维护 [Auto.js](https://github.com/hyb1996/Auto.js)，我计划在原来 4.1 版本的基础上继续维护项目，并将原项目命名为 [AutoX.js](https://github.com/aiselp/AutoX/)。
 
 欢迎更多开发者参与这个项目的维护与升级。
 
 这篇文档里有加密相关的内容可能和实际运行情况有冲突，我会逐步完善更新，程序代码，尽可能保持一致。
 
-AutoX.js 使用 JavaScript 作为脚本语言，目前使用 [Rhino 1.7.13](https://github.com/mozilla/rhino) 作为脚本引擎，支持 ES5 与部分 ES6 特性。
+AutoX.js 使用 JavaScript 作为脚本语言，目前使用 [Rhino 1.8.0](https://github.com/mozilla/rhino) 作为脚本引擎，支持 ES5 与部分 ES6 特性。
 
 - 学习 AutoX.js 的 API 之前，建议先学习 JavaScript 的基本语法。
 - 如果想要在电脑上开发 AutoX.js，可以使用 VSCode 以及 [AutoX.js 插件](https://marketplace.visualstudio.com/items?itemName=aaroncheng.auto-js-vsce-fixed)。
@@ -18,7 +18,7 @@ AutoX.js 使用 JavaScript 作为脚本语言，目前使用 [Rhino 1.7.13](http
 
 # AutoX.js 下载地址
 
-在 [Github Releases](https://github.com/kkevsekk1/AutoX/releases) 下载
+在 [Github Releases](https://github.com/aiselp/AutoX/releases) 下载
 
 # AutoX.js 的功能
 
@@ -62,9 +62,9 @@ AutoX.js 使用 JavaScript 作为脚本语言，目前使用 [Rhino 1.7.13](http
 
 # 参与共建
 
-[软件源码](https://github.com/kkevsekk1/AutoX)
+[软件源码](https://github.com/aiselp/AutoX/)
 
-[文档源码](https://github.com/kkevsekk1/AutoXJs-Docs)
+[文档源码](https://github.com/aiselp/AutoxDoc)
 
 本文档更新稍有滞后，某些模块文档并没写完，希望有开发者共同参与维护！
 

@@ -83,7 +83,7 @@ const config: Config = {
         },
         // { to: '/blog', label: 'Blog', position: 'left' },
         {
-          href: 'https://github.com/kkevsekk1/AutoX',
+          href: 'https://github.com/aiselp/AutoX/',
           label: 'GitHub',
           position: 'right',
         },
@@ -108,16 +108,12 @@ const config: Config = {
           title: 'Community',
           items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+              label: '交流社区',
+              href: 'http://www.autoxjs.com/',
             },
             {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
-            },
-            {
-              label: 'Twitter',
-              href: 'https://twitter.com/docusaurus',
+              label: 'Telegram',
+              href: 'https://t.me/+bkx23tdbM6U3N2M1',
             },
           ],
         },
@@ -130,7 +126,7 @@ const config: Config = {
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/kkevsekk1/AutoX',
+              href: 'https://github.com/aiselp/AutoX/',
             },
           ],
         },
