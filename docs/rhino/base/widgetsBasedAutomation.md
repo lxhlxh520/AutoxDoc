@@ -44,6 +44,29 @@ auto();
 - `fast` 快速模式。该模式下会启用控件缓存，从而选择器获取屏幕控件更快。对于需要快速的控件查看和操作的脚本可以使用该模式，一般脚本则没有必要使用该函数。
 - `normal` 正常模式，默认。
 
+## auto.takeScreenshot()
+
+v7.1.2 新增
+
+- return \{Image}
+
+使用无障碍权限截图，返回一个 Image 对象。
+
+```js
+let img = auto.takeScreenshot();
+images.save(img, "./img.png");
+```
+
+## auto.takeScreenshotAsync(callback)
+
+v7.1.2 新增
+
+- callback \{function} 回调函数
+  - image \{Image} 第 1 个参数为 Image 对象
+  - errCode \{number} 如果截图失败，第 2 个参数为错误代码
+
+使用无障碍权限异步截图，此方法不阻塞线程，返回更快
+
 # SimpleActionAutomator
 
 > 稳定性: 稳定
