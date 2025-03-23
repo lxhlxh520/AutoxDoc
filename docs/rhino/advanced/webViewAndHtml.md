@@ -1,7 +1,33 @@
 # WebView 与 HTML
-## *JsBridge
-v6.3.9新增  
+
+## WebView.loadLocalFile(path)
+
+v7.1.3 新增
+
+- path \{ string } 文件或目录所在的绝对路径
+
+此方法可以便捷的加载一个本地 web 静态网站，调用该方法后 webview 将可以访问 path 所指定目录下的所有文件，
+path 如果是文件将获得该文件所在目录下的访问权限
+
+默认情况下 WebView 不具有文件访问权限，如果使用`WebView.settings.allowFileAccess = true`将会授予所有文件的访问权，这样将面临一定的安全风险
+
+例子
+
+```js
+"ui";
+ui.layout(`
+    <vertical>
+        <webview id="web" h="*"/>
+    </vertical>`);
+//可用files.path解析相对路径
+ui.web.loadLocalFile(files.path("./you/website"));
+```
+
+## JsBridge
+
+v6.3.9 新增  
 html>>
+
 ```html
 <html>
   <body style="font: size 2em">
@@ -34,16 +60,19 @@ html>>
   </body>
 </html>
 ```
-js代码  
+
+js 代码
+
 ```js
 "ui";
 
 ui.layout(`
     <vertical>
         <webview id="web" h="*"/>
-    </vertical>`)
-
-ui.web.loadUrl("file://" + files.path("./网页.html"))
+    </vertical>`);
+//允许访问文件资源
+ui.web.settings.allowFileAccess = true;
+ui.web.loadUrl("file://" + files.path("./网页.html"));
 /*
     注意：在web与安卓端传递的数据只能是字符串，其他数据需自行使用JSON序列化
     在调用callHandler时传入了回调函数，但web端没有调用则会造成内存泄露。
@@ -51,196 +80,257 @@ ui.web.loadUrl("file://" + files.path("./网页.html"))
 */
 //注册一个监听函数
 ui.web.jsBridge.registerHandler("test", (data, callBack) => {
-    toastLog("web调用安卓,data:" + data)
-    setTimeout(() => {
-        //回调web
-        callBack("1155")
-    }, 2000)
-})
+  toastLog("web调用安卓,data:" + data);
+  setTimeout(() => {
+    //回调web
+    callBack("1155");
+  }, 2000);
+});
 //定时器中等待web加载完成
 setTimeout(() => {
-    ui.web.jsBridge.callHandler('jsTest', '数据', (data) => {
-        toastLog('web回调,data:' + data)
-    })
-}, 1000)
+  ui.web.jsBridge.callHandler("jsTest", "数据", (data) => {
+    toastLog("web回调,data:" + data);
+  });
+}, 1000);
 ```
-## 纯js实现
+
+## 纯 js 实现
+
 ```js
 "ui";
 ui.layout(
-    <vertical>
-        <horizontal bg="#c7edcc" gravity="center" h="auto">
-            <button text="网络冲浪" id="surfInternetBtn" style="Widget.AppCompat.Button.Colored" w="auto" />
-            <button text="记忆翻牌" id="loadLocalHtmlBtn" style="Widget.AppCompat.Button.Colored" w="auto" />
-            <button text="控制台" id="consoleBtn" style="Widget.AppCompat.Button.Colored" w="auto" />
-        </horizontal>
-        <vertical h="*" w="*">
-            <webview id="webView" layout_below="title" w="*" h="*" />
-        </vertical>
+  <vertical>
+    <horizontal bg="#c7edcc" gravity="center" h="auto">
+      <button
+        text="网络冲浪"
+        id="surfInternetBtn"
+        style="Widget.AppCompat.Button.Colored"
+        w="auto"
+      />
+      <button
+        text="记忆翻牌"
+        id="loadLocalHtmlBtn"
+        style="Widget.AppCompat.Button.Colored"
+        w="auto"
+      />
+      <button
+        text="控制台"
+        id="consoleBtn"
+        style="Widget.AppCompat.Button.Colored"
+        w="auto"
+      />
+    </horizontal>
+    <vertical h="*" w="*">
+      <webview id="webView" layout_below="title" w="*" h="*" />
     </vertical>
+  </vertical>
 );
 
 function callJavaScript(webViewWidget, script, callback) {
-    try {
-        console.assert(webViewWidget != null, "webView控件为空");
-        //console.log(script.toString())
-        webViewWidget.evaluateJavascript("javascript:" + script, new JavaAdapter(android.webkit.ValueCallback, {
-            onReceiveValue: (val) => {
-                if (callback) {
-                    callback(val);
-                }
-            }
-        }));
-    } catch (e) {
-        console.error("执行JavaScript失败");
-        console.trace(e);
-    }
+  try {
+    console.assert(webViewWidget != null, "webView控件为空");
+    //console.log(script.toString())
+    webViewWidget.evaluateJavascript(
+      "javascript:" + script,
+      new JavaAdapter(android.webkit.ValueCallback, {
+        onReceiveValue: (val) => {
+          if (callback) {
+            callback(val);
+          }
+        },
+      })
+    );
+  } catch (e) {
+    console.error("执行JavaScript失败");
+    console.trace(e);
+  }
 }
 
 function AutoX() {
-    let getAutoXFrame = () => {
-        let bridgeFrame = document.getElementById("AutoXFrame");
-        if (!bridgeFrame) {
-            bridgeFrame = document.createElement('iframe');
-            bridgeFrame.id = "AutoXFrame";
-            bridgeFrame.style = "display: none";
-            document.body.append(bridgeFrame);
-        }
-        return bridgeFrame;
-    };
-    const h5Callbackers = {};
-    let h5CallbackIndex = 1;
-    let setCallback = (callback) => {
-        let callId = h5CallbackIndex++;
-        h5Callbackers[callId] = {
-            "callback": callback
-        };
-        return callId;
-    };
-    let getCallback = (callId) => {
-        let callback = h5Callbackers[callId];
-        if (callback) {
-            delete h5Callbackers[callId];
-        }
-        return callback;
-    };
-
-    function invoke(cmd, params, callback) {
-        let callId = null;
-        try {
-            let paramsStr = JSON.stringify(params);
-            let AutoXFrame = getAutoXFrame();
-            callId = setCallback(callback);
-            AutoXFrame.src = "jsbridge://" + cmd + "/" + callId + "/" + encodeURIComponent(paramsStr);
-        } catch (e) {
-            if (callId) {
-                getCallback(callId);
-            }
-            console.trace(e);
-        }
-    };
-    let callback = (data) => {
-        let callId = data.callId;
-        let params = data.params;
-        let callbackFun = getCallback(callId);
-        if (callbackFun) {
-            callbackFun.callback(params);
-        }
-    };
-    return {
-        invoke: invoke,
-        callback: callback
-    };
-};
-function bridgeHandler_handle(cmd, params) {
-    console.log('bridgeHandler处理 cmd=%s, params=%s', cmd, JSON.stringify(params));
-    let fun = this[cmd];
-    if (!fun) {
-        throw new Error("cmd= " + cmd + " 没有定义实现");
+  let getAutoXFrame = () => {
+    let bridgeFrame = document.getElementById("AutoXFrame");
+    if (!bridgeFrame) {
+      bridgeFrame = document.createElement("iframe");
+      bridgeFrame.id = "AutoXFrame";
+      bridgeFrame.style = "display: none";
+      document.body.append(bridgeFrame);
     }
-    let ret = fun(params)
-    return ret;
+    return bridgeFrame;
+  };
+  const h5Callbackers = {};
+  let h5CallbackIndex = 1;
+  let setCallback = (callback) => {
+    let callId = h5CallbackIndex++;
+    h5Callbackers[callId] = {
+      callback: callback,
+    };
+    return callId;
+  };
+  let getCallback = (callId) => {
+    let callback = h5Callbackers[callId];
+    if (callback) {
+      delete h5Callbackers[callId];
+    }
+    return callback;
+  };
+
+  function invoke(cmd, params, callback) {
+    let callId = null;
+    try {
+      let paramsStr = JSON.stringify(params);
+      let AutoXFrame = getAutoXFrame();
+      callId = setCallback(callback);
+      AutoXFrame.src =
+        "jsbridge://" +
+        cmd +
+        "/" +
+        callId +
+        "/" +
+        encodeURIComponent(paramsStr);
+    } catch (e) {
+      if (callId) {
+        getCallback(callId);
+      }
+      console.trace(e);
+    }
+  }
+  let callback = (data) => {
+    let callId = data.callId;
+    let params = data.params;
+    let callbackFun = getCallback(callId);
+    if (callbackFun) {
+      callbackFun.callback(params);
+    }
+  };
+  return {
+    invoke: invoke,
+    callback: callback,
+  };
+}
+function bridgeHandler_handle(cmd, params) {
+  console.log(
+    "bridgeHandler处理 cmd=%s, params=%s",
+    cmd,
+    JSON.stringify(params)
+  );
+  let fun = this[cmd];
+  if (!fun) {
+    throw new Error("cmd= " + cmd + " 没有定义实现");
+  }
+  let ret = fun(params);
+  return ret;
 }
 function mFunction(params) {
-    toastLog(params.toString());
-    device.vibrate(120);
-    return files.isDir('/storage/emulated/0/Download')//'toast提示成功';
+  toastLog(params.toString());
+  device.vibrate(120);
+  return files.isDir("/storage/emulated/0/Download"); //'toast提示成功';
 }
 function webViewExpand_init(webViewWidget) {
-    webViewWidget.webViewClient = new JavaAdapter(android.webkit.WebViewClient, {
-        onPageFinished: (webView, curUrl) => {
-            try {
-                // 注入 AutoX
-                callJavaScript(webView, AutoX.toString() + ";var auto0 = AutoX();auto0.invoke('mFunction','This is AutoX!',(data) => {console.log('接收到callback1:' + JSON.stringify(data));});", null);
-            } catch (e) {
-                console.trace(e)
-            }
-        },
-        shouldOverrideUrlLoading: (webView, request) => {
-            let url = '';
-            try {
-                url = (request.a && request.a.a) || (request.url);
-                if (url instanceof android.net.Uri) {
-                    url = url.toString();
-                }
-                if (url.indexOf("jsbridge://") == 0) {
-                    let uris = url.split("/");
-                    let cmd = uris[2];
-                    let callId = uris[3];
-                    let params = java.net.URLDecoder.decode(uris[4], "UTF-8");
-                    console.log('AutoX处理JavaScript调用请求: callId=%s, cmd=%s, params=%s', callId, cmd, params);
-                    let result = null;
-                    try {
-                        result = bridgeHandler_handle(cmd, JSON.parse(params));
-                    } catch (e) {
-                        console.trace(e);
-                        result = {
-                            message: e.message
-                        };
-                    }
-                    result = result || {};
-                    webView.loadUrl("javascript:auto0.callback({'callId':" + callId + ", 'params': " + JSON.stringify(result) + "});");
-                } else if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("file://") || url.startsWith("ws://") || url.startsWith("wss://")) {
-                    webView.loadUrl(url);
-                } else {
-                }
-                return true;
-            } catch (e) {
-                if (e.javaException instanceof android.content.ActivityNotFoundException) {
-                    webView.loadUrl(url);
-                } else {
-                    toastLog('无法打开URL: ' + url);
-                }
-                console.trace(e);
-            }
-        },
-        onReceivedError: (webView, webResourceRequest, webResourceError) => {
-            let url = webResourceRequest.getUrl();
-            let errorCode = webResourceError.getErrorCode();
-            let description = webResourceError.getDescription();
-            console.trace(errorCode + " " + description + " " + url);
+  webViewWidget.webViewClient = new JavaAdapter(android.webkit.WebViewClient, {
+    onPageFinished: (webView, curUrl) => {
+      try {
+        // 注入 AutoX
+        callJavaScript(
+          webView,
+          AutoX.toString() +
+            ";var auto0 = AutoX();auto0.invoke('mFunction','This is AutoX!',(data) => {console.log('接收到callback1:' + JSON.stringify(data));});",
+          null
+        );
+      } catch (e) {
+        console.trace(e);
+      }
+    },
+    shouldOverrideUrlLoading: (webView, request) => {
+      let url = "";
+      try {
+        url = (request.a && request.a.a) || request.url;
+        if (url instanceof android.net.Uri) {
+          url = url.toString();
         }
-    });
-    webViewWidget.webChromeClient = new JavaAdapter(android.webkit.WebChromeClient, {
-        onConsoleMessage: (msg) => {
-            console.log("[%s:%s]: %s", msg.sourceId(), msg.lineNumber(), msg.message());
+        if (url.indexOf("jsbridge://") == 0) {
+          let uris = url.split("/");
+          let cmd = uris[2];
+          let callId = uris[3];
+          let params = java.net.URLDecoder.decode(uris[4], "UTF-8");
+          console.log(
+            "AutoX处理JavaScript调用请求: callId=%s, cmd=%s, params=%s",
+            callId,
+            cmd,
+            params
+          );
+          let result = null;
+          try {
+            result = bridgeHandler_handle(cmd, JSON.parse(params));
+          } catch (e) {
+            console.trace(e);
+            result = {
+              message: e.message,
+            };
+          }
+          result = result || {};
+          webView.loadUrl(
+            "javascript:auto0.callback({'callId':" +
+              callId +
+              ", 'params': " +
+              JSON.stringify(result) +
+              "});"
+          );
+        } else if (
+          url.startsWith("http://") ||
+          url.startsWith("https://") ||
+          url.startsWith("file://") ||
+          url.startsWith("ws://") ||
+          url.startsWith("wss://")
+        ) {
+          webView.loadUrl(url);
+        } else {
         }
-    });
+        return true;
+      } catch (e) {
+        if (
+          e.javaException instanceof android.content.ActivityNotFoundException
+        ) {
+          webView.loadUrl(url);
+        } else {
+          toastLog("无法打开URL: " + url);
+        }
+        console.trace(e);
+      }
+    },
+    onReceivedError: (webView, webResourceRequest, webResourceError) => {
+      let url = webResourceRequest.getUrl();
+      let errorCode = webResourceError.getErrorCode();
+      let description = webResourceError.getDescription();
+      console.trace(errorCode + " " + description + " " + url);
+    },
+  });
+  webViewWidget.webChromeClient = new JavaAdapter(
+    android.webkit.WebChromeClient,
+    {
+      onConsoleMessage: (msg) => {
+        console.log(
+          "[%s:%s]: %s",
+          msg.sourceId(),
+          msg.lineNumber(),
+          msg.message()
+        );
+      },
+    }
+  );
 }
-webViewExpand_init(ui.webView)
+webViewExpand_init(ui.webView);
 ui.webView.loadUrl("https://wht.im");
 
 ui.surfInternetBtn.on("click", () => {
-    webViewExpand_init(ui.webView);
-    ui.webView.loadUrl("https://wht.im");
+  webViewExpand_init(ui.webView);
+  ui.webView.loadUrl("https://wht.im");
 });
 ui.consoleBtn.on("click", () => {
-    app.startActivity("console");
+  app.startActivity("console");
 });
-ui.loadLocalHtmlBtn.on('click', () => {
-    webViewExpand_init(ui.webView);
-    let path = "file:" + files.path("game.html");
-    ui.webView.loadUrl(path);
+ui.loadLocalHtmlBtn.on("click", () => {
+  webViewExpand_init(ui.webView);
+  let path = "file:" + files.path("game.html");
+  ui.webView.loadUrl(path);
 });
-
 ```
