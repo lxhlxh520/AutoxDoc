@@ -24,6 +24,12 @@ shizuku("input tap 500 500");
 
 返回 shizuku 是否可用
 
+## shizuku.openAccessibility()
+
+v 7.1.3 新增
+
+直接打开无障碍服务，服务启动需要一定时间
+
 ## shizuku.runRhinoScript(script)
 
 v7.1.2 新增

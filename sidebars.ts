@@ -39,7 +39,7 @@ if (existsSync(targetDir)) {
  */
 const sidebars: SidebarsConfig = {
   // By default, Docusaurus generates a sidebar from the docs folder structure
-  tutorialSidebar: ['rhino/documentation', {
+  tutorialSidebar: ['rhino/documentation', 'rhino/vscode', {
     type: 'category',
     label: '基础',
     collapsed: false,
