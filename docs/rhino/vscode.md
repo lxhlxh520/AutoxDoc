@@ -33,6 +33,55 @@ npm i -D autox-v6-api
 
 无需额外配置你可参考模板的示例代码直接使用 jsx 编写 ui，输出的代码需要在 autox 版本 v7.1.3 以上才可运行
 
+## 编写 webui 并配合 webview 来显示界面
+
+目前自带的 ui 框架也许对许多人来说不够美观，功能不齐全，
+在这里提供了一套使用[vite](https://cn.vitejs.dev/)+[vue](https://cn.vuejs.org/)+[Framework7](https://framework7.io/)+[TypeScript](https://www.typescriptlang.org/) （技术难度较高）编写 webui 界面的方案，并且支持同时编写 autox 代码，并能够通过[JsBridge](./advanced/webViewAndHtml.md#jsbridge)与之通信，
+
+模板下载: [v6-project-webui-demo.zip](https://github.com/aiselp/AutoX/releases/tag/v7.1.2)
+
+使用该模板需要配合 Autox 7.1.3 以上版本才可使用，下载模板后使用 vscode 打开，运行以下命令
+
+```
+npm install
+npm i -D autox-v6-api
+```
+
+安装完成后现在可以运行`npm run dev`启动 vite 调试服务器
+
+如果一切正常，那么现在可以在 src 目录下编写 webui 的代码
+
+在 src-autox 目录下编写 autox 环境中运行的代码，
+运行`npm run build-autox`将编译项目，生成的代码在`dist-autox`目录
+
+### 连接到手机并调试
+
+首先将确保你的手机与电脑在同一局域网下，
+在手机中打开 autox app ，在侧边栏打开 usb 调试，
+
+随后打开 vite 调试服务器，新建一个终端运行
+
+```
+npm run dev-autox
+```
+
+第一次运行会要求输入手机的 ip 地址，之后只要回车确认即可，
+
+等待构建完成后将会在手机打开界面，
+现在尝试修改 src 目录下的 web 代码界面也会同步更新，
+但是修改 src-autox 目录下的文件需要重新运行`npm run dev-autox`才能得到更新
+
+### 保存项目到手机
+
+运行
+
+```
+npm run save-autox
+```
+
+将会保存项目到手机的脚本主目录下，要注意的是如果有同名的项目会将文件覆盖，
+注意备份
+
 ## 已有项目仅导入申明文件
 
 首先在你的项目目录运行以下代码安装依赖包
