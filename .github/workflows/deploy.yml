@@ -21,7 +21,7 @@ jobs:
           repository: aiselp/AutoX
           path: Autox-v7-api
           sparse-checkout: |
-            autojs/src/js-api
+            autojs/src/main/js/
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -29,12 +29,12 @@ jobs:
 
       - name: build-v7-api
         run: |
-          pushd Autox-v7-api/autojs/src/js-api
+          pushd Autox-v7-api/autojs/src/main/js/v7-api
           npm install
           npm run docs
           popd
           rm -rf docs/nodejs/docs
-          mv Autox-v7-api/autojs/src/js-api/docs/ docs/nodejs/
+          mv Autox-v7-api/autojs/src/main/js/v7-api/docs/ docs/nodejs/
       - name: Install dependencies
         run: npm ci
       - name: Build website
