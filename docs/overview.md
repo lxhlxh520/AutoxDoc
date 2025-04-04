@@ -13,7 +13,7 @@ sidebar_position: 2
 AutoX.js 使用 JavaScript 作为脚本语言，目前使用 [Rhino 1.8.0](https://github.com/mozilla/rhino) 作为脚本引擎，支持 ES5 与部分 ES6 特性。
 
 - 学习 AutoX.js 的 API 之前，建议先学习 JavaScript 的基本语法。
-- 如果想要在电脑上开发 AutoX.js，可以使用 VSCode 以及 [AutoX.js 插件](https://marketplace.visualstudio.com/items?itemName=aaroncheng.auto-js-vsce-fixed)。
+- 如果想要在电脑上开发 AutoX.js，可以使用 VSCode 以及 [AutoX.js 插件](https://marketplace.visualstudio.com/items?itemName=aaroncheng.auto-js-vsce-fixed)。另外,你也可以使用jetbrains公司的 [WebStorm](https://www.jetbrains.com/webstorm/)或其他ide来开发,插件市场搜索AutoX,或者直接去[github](https://github.com/WgoW/AutoXPlugin/releases/tag/1.0)下载。
 - 如果想要使用 TypeScript 来开发，目前有开发者公布了一个 [相关工具](https://github.com/pboymt/autojs-dev)。
 
 # AutoX.js 下载地址

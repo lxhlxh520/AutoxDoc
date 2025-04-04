@@ -69,6 +69,7 @@ const sidebars: SidebarsConfig = {
   nodejs: [
     "nodejs/intro",
     "nodejs/vscode",
+    "nodejs/webstorm",
     nodeModulesConfig,
   ],
   // But you can create a sidebar manually
