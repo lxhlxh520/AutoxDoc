@@ -1,7 +1,5 @@
 # 协程
 
-见 App 中 `示例代码 / 协程`
-
 ## Promise.coroutine()
 
 **v6.3.7 新增**
@@ -42,3 +40,35 @@ main(10); //在控制台每秒输出一个数字
 - handler `{function}` 处理函数
 
 函数的参数为 yield 的导出，反回值为 yield 的反回
+
+## bluebird-co
+
+[bluebird-co](https://github.com/novacrazy/bluebird-co) 是一个高效的 yield 处理程序，
+该处理程序可以转换与 [tj/co](https://github.com/tj/co) 所有相同的 yieldable 值类型以及更多。
+
+使用
+
+```js
+require('bluebird-co');
+var myAsyncFunction = Promise.coroutine(function*() {
+    var results = yield [
+      Promise.delay( 10 ).return( 42 ),
+      Promise.resolve( "somefile contents" ),
+      [1, Promise.resolve( 12 )]
+    ];
+    console.log(results); //[42, "somefile contents", [1, 12]]
+});
+
+myAsyncFunction().then(...);
+```
+
+### Yieldable Types
+
+- Promises
+- Arrays
+- Objects
+- Generators and GeneratorFunctions
+- Iterables (like new Set([1, 2, 3]).values())
+- Functions (as Thunks)
+- Custom data types via [.addYieldHandler(fn)#addyieldhandlerfn--function
+- Any combination or nesting of the above.

@@ -40,7 +40,7 @@ npm i -D autox-v6-api
 
 模板下载: [v6-project-webui-demo.zip](https://github.com/aiselp/AutoX/releases/tag/v7.1.2)
 
-使用该模板需要配合 Autox 7.1.3 以上版本才可使用，下载模板后使用 vscode 打开，运行以下命令
+使用该模板需要配合 Autox 7.1.4 以上版本才可使用，下载模板后使用 vscode 打开，运行以下命令
 
 ```
 npm install
