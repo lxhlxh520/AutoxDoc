@@ -1,6 +1,6 @@
 # AutoX.js 文档
 
-地址 : https://autox-doc.vercel.app/
+地址 : 自用
 
 使用 [Docusaurus](https://docusaurus.io/) 构建
 
